@@ -38,4 +38,39 @@ class Libro{
             LocalStorageOperation.BorrarLibro(element.parentElement.parentElement.parentElement.id);
         }
     }
+
+    editar(idEdit){
+        let inputT = document.getElementById('inputTitulo');
+        let inputA = document.getElementById('inputAutor');
+        //Comprobamos que el libro editado no esté repetido
+        if(!LocalStorageOperation.validarLibro(inputT.value.trim().toLowerCase(),inputA.value.trim().toLowerCase())){
+            let arrayLibros = LocalStorageOperation.obtenerLS();
+            
+            //Comparar autor y título extraídos del nuevo modal
+            for(let i = 0; i<arrayLibros.length; i++){
+                if(arrayLibros[i].id == idEdit){
+                    arrayLibros[i].titulo = inputT.value;
+                    arrayLibros[i].autor = inputA.value;
+                }
+            }
+            localStorage.clear();
+            localStorage.setItem('Libros',JSON.stringify(arrayLibros));
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'El libro fue editado exitosamente',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+        else{
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: `El libro ${inputT.value} escrito por ${inputA.value} ya existe en la librería`,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    }
 }
